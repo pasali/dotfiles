@@ -1,0 +1,45 @@
+serve() {
+  local port=${1:-8000}
+  local ip=$(ipconfig getifaddr en0)
+  echo "Serving on ${ip}:${port} ..."
+  python -m SimpleHTTPServer ${port}
+}
+
+# Open PR on GitHub
+pr() {
+  if type gh &> /dev/null; then
+    gh pr view -w
+  else
+    echo "gh is not installed"
+  fi
+}
+
+#################
+# k8s
+#################
+
+
+kexec () {
+  kubectl exec -it $1 -- ${2:-bash}
+}
+
+# Get the pod names (just the names) of all pods in a namespace.
+kgpns () {
+  echo $(kubectl get pods ${1} -o go-template --template '{{range .items}}{{.metadata.name}}{{" "}}{{end}}')
+}
+
+# Delete all pods within a namespace.
+kdap () {
+  read "kdelete?This will attempt to delete all pods within the namespace. Do you want to continue?(y/N) "
+  if [[ "${kdelete}" =~ ^[yY]$ ]]; then
+    kubectl delete pods $(kgpns ${1}) ${1}
+  fi
+}
+
+# Drain node
+kdrain () {
+  read "kdrainnode? This will drain the node ${1}, delete local data, and ignore daemonsets. Do you want to continue?(y/N) "
+  if [[ "${kdrainnode}" =~ ^[yY]$ ]]; then
+    kubectl drain ${1} --delete-local-data --force --ignore-daemonsets
+  fi
+}
