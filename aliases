@@ -76,3 +76,6 @@ alias reload="exec ${SHELL} -l"
 alias path='echo -e ${PATH//:/\\n}'
 
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed'
+
+# ¯\_(ツ)_/¯
+alias shrug="echo '¯\_(ツ)_/¯' | pbcopy"

@@ -43,3 +43,22 @@ kdrain () {
     kubectl drain ${1} --delete-local-data --force --ignore-daemonsets
   fi
 }
+
+checkcert() {
+	if [ -z "${1}" ]; then
+		echo "ERROR: No domain specified.";
+		return 1;
+	fi;
+
+	local domain="${1}";
+
+	local temp=$(echo | openssl s_client -connect "${domain}:443" -servername "${domain}"  2>/dev/null | openssl x509 -noout -enddate -issuer -subject);
+  local subject=$(echo "${temp}" | grep "subject=" | sed -e "s/subject=//" | sed $'s/\\//\\\n/g' | grep "O=" | sed -e "s/O=//");
+  if [ ! -z "${subject}" ]; then
+		echo "Subject: " ${subject};
+	fi;
+  echo -n "Issued By: ";
+  echo "${temp}" | grep "issuer=" | sed -e "s/^.*CN=//";
+  echo -n "Expires: ";
+  echo "${temp}" | grep "notAfter=" | sed -e "s/notAfter=//";
+}
