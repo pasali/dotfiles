@@ -1,7 +1,7 @@
 
 DOTFILE_PATH := $(shell pwd)
 
-FILES := $(HOME)/.aliases $(HOME)/.exports $(HOME)/.functions $(HOME)/.zshrc $(HOME)/.git-prompt.sh $(HOME)/.gitconfig
+FILES := $(HOME)/.aliases $(HOME)/.exports $(HOME)/.functions $(HOME)/.zshrc $(HOME)/.git-prompt.sh $(HOME)/.gitconfig $(HOME)/.digrc
 
 $(HOME)/.%: %
 	ln -sf $(DOTFILE_PATH)/$^ $@
