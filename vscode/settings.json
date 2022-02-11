@@ -19,6 +19,9 @@
     "terraform-ls.experimentalFeatures": {
         "validateOnSave": true
     },
+    "[terraform]": {
+        "editor.defaultFormatter": "hashicorp.terraform"
+    },
     // golang
     "[go]": {
         "editor.defaultFormatter": "golang.go"
