@@ -27,5 +27,5 @@
         "editor.defaultFormatter": "golang.go"
     },
     "go.formatTool": "gofmt",
-    "hediet.vscode-drawio.theme": "Kennedy"
+    "hediet.vscode-drawio.theme": "Kennedy",
 }
