@@ -62,7 +62,6 @@ cask "iterm2"
 brew "gh"
 cask "flycut"
 brew "jq"
-brew "ngrok"
 brew "tree"
 brew "wget"
 brew "curl"
@@ -79,7 +78,6 @@ brew "gnupg"
 brew "htop"
 brew "jump"
 brew "ripgrep"
-brew "unrar"
 brew "nmap"
 brew "pngcheck"
 brew "tailscale"
@@ -102,3 +100,5 @@ cask 'docker'
 cask 'whatsapp'
 cask 'spotify'
 cask 'virtualbox'
+cask "ngrok"
+cask "rar"
