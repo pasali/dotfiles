@@ -16,6 +16,6 @@ install:
 	code --install-extension k--kato.intellij-idea-keybindings
 
 sync: $(FILES)
-	ln -sf "${DOTFILE_PATH}/vscode/settings.json" "${HOME}/Library/Application\ Support/Code/User/settings.json"
+	ln -sf ${DOTFILE_PATH}/vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
 
 .PHONY: sync install
