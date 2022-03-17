@@ -47,7 +47,7 @@ brew "azure-cli"
 cask "google-cloud-sdk"
 
 ## container
-brew "docker"
+cask 'docker'
 brew "kind"
 brew "kubernetes-cli"
 brew "helm"
@@ -96,9 +96,9 @@ cask "vlc"
 cask "keybase"
 cask "microsoft-teams"
 cask "slack"
-cask 'docker'
 cask 'whatsapp'
 cask 'spotify'
-cask 'virtualbox'
 cask "ngrok"
 cask "rar"
+cask "tunnelblick"
+cask "microsoft-outlook"
