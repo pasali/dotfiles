@@ -62,3 +62,5 @@ checkcert() {
   echo -n "Expires: ";
   echo "${temp}" | grep "notAfter=" | sed -e "s/notAfter=//";
 }
+
+c() { printf "%s\n" "$@" | bc -l; }
