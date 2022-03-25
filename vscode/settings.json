@@ -1,8 +1,9 @@
 {
-    "workbench.colorTheme": "GitHub Dark",
+    "workbench.colorTheme": "GitHub Dark Dimmed",
     "editor.minimap.enabled": false,
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
+    "editor.suggest.preview": true,
     "files.autoSave": "afterDelay",
     "window.newWindowDimensions": "inherit",
     "window.openFoldersInNewWindow": "on",
@@ -10,17 +11,25 @@
     //terraform
     "terraform.languageServer": {
         "external": true,
-        "pathToBinary": "/usr/local/bin/terraform-ls",
+        "pathToBinary": "/opt/homebrew/bin/terraform-ls",
         "args": [
             "serve",
-            "-tf-exec=/usr/local/bin/terraform"
+            "-tf-exec=/opt/homebrew/bin/terraform"
         ],
     },
     "terraform-ls.experimentalFeatures": {
-        "validateOnSave": true
+        "validateOnSave": true,
+        "prefillRequiredFields": true
     },
     "[terraform]": {
-        "editor.defaultFormatter": "hashicorp.terraform"
+        "editor.defaultFormatter": "hashicorp.terraform",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file"
+    },
+    "[terraform-vars]": {
+        "editor.defaultFormatter": "hashicorp.terraform",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file"
     },
     // golang
     "[go]": {
