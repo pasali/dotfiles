@@ -27,7 +27,8 @@ setopt HIST_IGNORE_SPACE         # Dont record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Dont write duplicate entries in the history file.
 
 setopt inc_append_history
-setopt share_history
+setopt no_share_history
+unsetopt share_history
 
 ###############
 #    PROMPT
