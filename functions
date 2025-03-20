@@ -14,6 +14,69 @@ pr() {
   fi
 }
 
+# Convert mp4 to gif
+convert2gif() {
+  ffmpeg -i ${1} -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${1%%.*}.gif
+}
+
+#################
+# OPENSSL
+#################
+
+# sha256 checksum
+fingerprint() {
+  openssl x509 -in ${1} -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64
+}
+
+# sha256 checksum
+fingerprintFromDomain() {
+  openssl s_client -showcerts -servername ${1} -connect ${1}:443 </dev/null 2>/dev/null | openssl x509 -outform PEM | openssl x509 -inform pem -noout -outform pem -pubkey | openssl pkey -pubin -inform pem -outform der | openssl dgst -sha256 -binary | openssl enc -base64
+}
+
+certContentFromDomain() {
+  openssl s_client -showcerts -servername ${1} -connect ${1}:443 </dev/null 2>/dev/null | openssl x509 -outform DER | openssl enc -base64 | tr -d '\n'
+}
+
+# pem to der
+pem2der() {
+  openssl x509 -in ${1} -inform PEM  -outform DER | openssl enc -base64 | tr -d '\n'
+}
+
+# get pem
+getpem() {
+  openssl s _client -showcerts -connect ${1}:443 -servername ${1} < /dev/null | openssl x509 -outform PEM > certificate.pem
+}
+
+# pfx to pem convertion
+pfx2pem() {
+  openssl pkcs12 -in ${1} -out  certificate.pem -nokeys -clcerts
+}
+
+# extract private key from pfx
+pfx2key() {
+  openssl pkcs12 -in ${1} -out private.key -nocerts -nodes
+}
+
+checkcert() {
+	if [ -z "${1}" ]; then
+		echo "ERROR: No domain specified.";
+		return 1;
+	fi;
+
+	local domain="${1}";
+
+	local temp=$(echo | openssl s_client -connect "${domain}:443" -servername "${domain}"  2>/dev/null | openssl x509 -noout -enddate -issuer -subject);
+  local subject=$(echo "${temp}" | grep "subject=" | sed -e "s/subject=//" | sed $'s/\\//\\\n/g' | grep "O=" | sed -e "s/O=//");
+  if [ ! -z "${subject}" ]; then
+		echo "Subject: " ${subject};
+	fi;
+  echo -n "Issued By: ";
+  echo "${temp}" | grep "issuer=" | sed -e "s/^.*CN=//";
+  echo -n "Expires: ";
+  echo "${temp}" | grep "notAfter=" | sed -e "s/notAfter=//";
+}
+
+
 #################
 # k8s
 #################
@@ -42,25 +105,6 @@ kdrain () {
   if [[ "${kdrainnode}" =~ ^[yY]$ ]]; then
     kubectl drain ${1} --delete-local-data --force --ignore-daemonsets
   fi
-}
-
-checkcert() {
-	if [ -z "${1}" ]; then
-		echo "ERROR: No domain specified.";
-		return 1;
-	fi;
-
-	local domain="${1}";
-
-	local temp=$(echo | openssl s_client -connect "${domain}:443" -servername "${domain}"  2>/dev/null | openssl x509 -noout -enddate -issuer -subject);
-  local subject=$(echo "${temp}" | grep "subject=" | sed -e "s/subject=//" | sed $'s/\\//\\\n/g' | grep "O=" | sed -e "s/O=//");
-  if [ ! -z "${subject}" ]; then
-		echo "Subject: " ${subject};
-	fi;
-  echo -n "Issued By: ";
-  echo "${temp}" | grep "issuer=" | sed -e "s/^.*CN=//";
-  echo -n "Expires: ";
-  echo "${temp}" | grep "notAfter=" | sed -e "s/notAfter=//";
 }
 
 c() { printf "%s\n" "$@" | bc -l; }

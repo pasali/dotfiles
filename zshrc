@@ -184,6 +184,10 @@ bindkey '^E' end-of-line
 # automatically remove duplicates from these arrays
 typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+    export TERM=xterm-256color
+fi
+
 #####################
 #    PLUGINS
 #####################
