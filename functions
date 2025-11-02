@@ -23,14 +23,17 @@ convert2gif() {
 # OPENSSL
 #################
 
-# sha256 checksum
-fingerprint() {
+pinFromPem() {
   openssl x509 -in ${1} -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64
 }
 
-# sha256 checksum
-fingerprintFromDomain() {
-  openssl s_client -showcerts -servername ${1} -connect ${1}:443 </dev/null 2>/dev/null | openssl x509 -outform PEM | openssl x509 -inform pem -noout -outform pem -pubkey | openssl pkey -pubin -inform pem -outform der | openssl dgst -sha256 -binary | openssl enc -base64
+pinFromDomain() {
+  openssl s_client -connect ${1}:443 -servername ${1} -showcerts </dev/null 2>/dev/null \
+  | openssl x509 -pubkey -noout \
+  | openssl pkey -pubin -outform DER \
+  | openssl dgst -sha256 -binary \
+  | openssl enc -base64
+
 }
 
 certContentFromDomain() {
