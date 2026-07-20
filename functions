@@ -111,3 +111,63 @@ kdrain () {
 }
 
 c() { printf "%s\n" "$@" | bc -l; }
+
+# pcurl — curl wrapper that resolves the PUBLIC IP (bypasses internal/split-horizon DNS)
+# Usage: pcurl [any curl flags] <url>
+# Optional: set PCURL_RESOLVER to change the external DNS (default 8.8.8.8)
+pcurl() {
+  local resolver="${PCURL_RESOLVER:-8.8.8.8}"
+  local url="" host="" port="" scheme="" ip=""
+  local args=("$@")
+
+  # 1) Prefer an explicit http(s):// argument (unambiguous, ignores flag values)
+  for a in "$@"; do
+    if [[ "$a" == http://* || "$a" == https://* ]]; then
+      url="$a"
+      break
+    fi
+  done
+
+  # 2) Fallback: URL is the last argument (as long as it isn't a flag)
+  if [[ -z "$url" ]]; then
+    local last="${@[-1]}"
+    if [[ -n "$last" && "$last" != -* ]]; then
+      url="$last"
+    fi
+  fi
+
+  if [[ -z "$url" ]]; then
+    echo "usage: pcurl [curl flags] <url>   (url needs http(s):// or must be the last arg)" >&2
+    return 1
+  fi
+
+  # Parse scheme / host / port
+  if [[ "$url" == *://* ]]; then
+    scheme="${url%%://*}"
+    host="${url#*://}"
+  else
+    scheme="https"          # default to https if no scheme given
+    host="$url"
+  fi
+  host="${host%%/*}"          # strip path
+  host="${host%%\?*}"         # strip query
+
+  if [[ "$host" == *:* ]]; then
+    port="${host##*:}"
+    host="${host%%:*}"
+  else
+    [[ "$scheme" == "http" ]] && port=80 || port=443
+  fi
+
+  # Resolve the PUBLIC IP via external resolver
+  ip=$(dig +short "$host" @"$resolver" A | grep -E '^[0-9.]+$' | tail -n1)
+  if [[ -z "$ip" ]]; then
+    echo "❌ pcurl: could not resolve $host via $resolver" >&2
+    return 1
+  fi
+
+  echo "pcurl: $host:$port → $ip (via $resolver)" >&2
+
+  # Run curl with all original args + the resolve override
+  command curl --resolve "$host:$port:$ip" "${args[@]}"
+}
