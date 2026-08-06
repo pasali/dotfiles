@@ -1,21 +1,24 @@
+DOTFILE_PATH := $(CURDIR)
 
-DOTFILE_PATH := $(shell pwd)
+DOTFILES := aliases exports functions zshrc git-prompt.sh gitconfig digrc
+FILES := $(addprefix $(HOME)/.,$(DOTFILES))
 
-FILES := $(HOME)/.aliases $(HOME)/.exports $(HOME)/.functions $(HOME)/.zshrc $(HOME)/.git-prompt.sh $(HOME)/.gitconfig $(HOME)/.digrc
+OPENCODE_DIR := $(HOME)/.config/opencode
+
+.DEFAULT_GOAL := help
+
+help: ## Show available targets
+	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
+
+install: ## Install packages via Homebrew
+	brew bundle
+
+sync: $(FILES) ## Symlink dotfiles and opencode config into $HOME
+	mkdir -p $(OPENCODE_DIR)
+	ln -sfn $(DOTFILE_PATH)/opencode/opencode.json $(OPENCODE_DIR)/opencode.json
+	ln -sfn $(DOTFILE_PATH)/opencode/agents $(OPENCODE_DIR)/agents
 
 $(HOME)/.%: %
-	ln -sf $(DOTFILE_PATH)/$^ $@
+	ln -sfn $(DOTFILE_PATH)/$< $@
 
-install:
-	brew bundle
-	code --install-extension github.github-vscode-theme
-	code --install-extension eamodio.gitlens
-	code --install-extension golang.go
-	code --install-extension hashicorp.terraform
-	code --install-extension ms-vscode-remote.remote-containers
-	code --install-extension k--kato.intellij-idea-keybindings
-
-sync: $(FILES)
-	ln -sf ${DOTFILE_PATH}/vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
-
-.PHONY: sync install
+.PHONY: help install sync
