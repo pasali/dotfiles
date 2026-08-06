@@ -20,7 +20,6 @@ SAVEHIST=1000000
 setopt EXTENDED_HISTORY
 setopt HIST_VERIFY
 setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
-setopt HIST_IGNORE_DUPS          # Dont record an entry that was just recorded again.
 setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
 setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
 setopt HIST_IGNORE_SPACE         # Dont record an entry starting with a space.
@@ -28,14 +27,13 @@ setopt HIST_SAVE_NO_DUPS         # Dont write duplicate entries in the history f
 
 setopt inc_append_history
 setopt no_share_history
-unsetopt share_history
 
 ###############
 #    PROMPT
 ###############
 setopt promptsubst
 
-local ret_status="%(?:%{$fg_bold[green]%}$:%{$fg_bold[green]%}$)"
+local ret_status="%(?:%{$fg_bold[green]%}$:%{$fg_bold[red]%}$)"
 PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
@@ -78,12 +76,18 @@ function parse_git_dirty() {
 # Add completions installed through Homebrew packages
 # See: https://docs.brew.sh/Shell-Completion
 if type brew &>/dev/null; then
-  FPATH=/usr/local/share/zsh/site-functions:$FPATH
+  BREW_PREFIX=$(brew --prefix)
+  FPATH=$BREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
 
-# Speed up completion init, see: https://htr3n.github.io/2018/07/faster-zsh/
+# Speed up completion init: only rebuild the dump file once a day,
+# otherwise trust the cache. See: https://htr3n.github.io/2018/07/faster-zsh/
 autoload -Uz compinit
-compinit
+if [[ -n $HOME/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 
 autoload bashcompinit
@@ -127,9 +131,9 @@ zstyle ':completion:*' rehash true
 # Keep directories and files separated
 zstyle ':completion:*' list-dirs-first true
 
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+# kubectl, helm, docker etc. completions come from Homebrew's site-functions
 
-complete -o nospace -C /usr/local/bin/terraform terraform
+[[ -n $commands[terraform] ]] && complete -o nospace -C $commands[terraform] terraform
 
 #####################
 #    KEY BINDINGS
@@ -192,12 +196,16 @@ fi
 #    PLUGINS
 #####################
 
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# syntax-highlighting must be sourced last, see:
+# https://github.com/zsh-users/zsh-syntax-highlighting#why-must-zsh-syntax-highlightingzsh-be-sourced-at-the-end-of-the-zshrc-file
+[[ -r $BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
+  source $BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -r $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
+  source $BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #####################
 #    THIRD PARTY
 #####################
 # brew install jump
 # https://github.com/gsamokovarov/jump
-eval "$(jump shell)"
+[[ -n $commands[jump] ]] && eval "$(jump shell)"
