@@ -5,4 +5,12 @@
   "plugin": [
     "superpowers@git+https://github.com/obra/superpowers.git",
   ],
+  "agent": {
+    "build": {
+      "disable": true
+    },
+    "plan": {
+      "disable": true
+    }
+  },
 }
