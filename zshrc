@@ -1,3 +1,5 @@
+# zsh file; shellcheck only understands sh/bash
+# shellcheck disable=all
 ###############
 #    INIT
 ###############
@@ -83,7 +85,7 @@ fi
 # Speed up completion init: only rebuild the dump file once a day,
 # otherwise trust the cache. See: https://htr3n.github.io/2018/07/faster-zsh/
 autoload -Uz compinit
-if [[ -n $HOME/.zcompdump(#qN.mh+24) ]]; then
+if [[ -n "$(find "$HOME/.zcompdump" -mmin +1440 2>/dev/null)" ]]; then
   compinit
 else
   compinit -C
