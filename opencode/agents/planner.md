@@ -3,7 +3,7 @@ description: Researches the codebase in depth and produces precise,
   actionable implementation plans with exact file paths and verification
   steps. Read-only; never edits files.
 mode: subagent
-model: amazon-bedrock/zai.glm-5
+model: amazon-bedrock/anthropic.claude-sonnet-5
 temperature: 0.1
 tools:
   write: false
@@ -48,7 +48,7 @@ lint) if one exists.
 
 ## Risks & open questions
 Assumptions you could not verify, decisions you made that someone might
-reasonably make differently, and anything the implementor must not guess at.
+reasonably make differently, and anything the worker must not guess at.
 
 ## Rules
 
