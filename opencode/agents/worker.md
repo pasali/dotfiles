@@ -25,7 +25,9 @@ have tested.
 3. Run the verification commands the plan specifies after the steps they
    verify — not just once at the end.
 4. Commit as the plan directs; if it does not specify commits, commit
-   logically complete units with clear messages.
+   logically complete units. Commit messages follow the convention in the
+   global rules (AGENTS.md) - reshape the plan's wording to fit it when the
+   plan words a message differently.
 
 ## When the plan is wrong or incomplete
 

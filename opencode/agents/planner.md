@@ -79,7 +79,8 @@ pieces connect, constraints discovered.
 Numbered, ordered steps. Each step names the exact file to create or modify,
 describes the change at code level (signatures, key logic — include code
 snippets where wording would be ambiguous), and is small enough to verify
-independently.
+independently. When a step specifies a commit, write the message per the
+commit convention in the global rules (AGENTS.md).
 
 ## Verification
 Exact commands to run and what output means success. Include both the

@@ -30,9 +30,20 @@
 
 ## Git
 
-- Commit subject: imperative mood, capitalized, no trailing period, ≤ 72
-  chars. Body wrapped at 72 columns, explaining **why** and what was broken
-  before — not a restatement of the diff.
+- Commit subject: imperative mood ("Add", "Fix", "Remove" - never "Added"
+  or "Adds"), first word capitalized, no trailing period, at most 72 chars.
+  Join two related changes with "and"; more than two means the commit is too
+  big - split it.
+- No conventional-commit prefixes (`feat:`, `fix:`, `chore:`).
+- If the task or branch references a ticket (e.g. INF-1234), prefix the
+  subject with it: `INF-1234: Add retry to webhook client`.
+- Body only when the why is not obvious from the subject: short prose
+  wrapped at 72 columns explaining the reason and what was broken before,
+  not a list of what changed - the diff shows what changed.
+- Examples of the shape:
+  `Add curl wrapper that resolves the PUBLIC IP`
+  `Fix Homebrew paths for Apple Silicon and speed up zsh startup`
+  `INF-2428: Reword clone step to use shallow single-branch clones`
 - One logical change per commit. Do not bundle unrelated cleanups.
 - No emoji, no `Co-Authored-By`, no tool attribution, no "Generated with"
   trailers, no advertising the model.
