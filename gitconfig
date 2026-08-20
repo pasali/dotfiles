@@ -193,3 +193,9 @@
 	insteadOf = "gist:"
 [rerere]
 	enabled = 1
+[credential "https://origin.cursor.com/git"]
+	helper = 
+	helper = !"$HOME/.local/bin/origin" credential-helper
+[credential "https://origin.cursor.com"]
+	helper = 
+	helper = !"$HOME/.local/bin/origin" credential-helper
