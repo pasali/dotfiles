@@ -94,10 +94,13 @@ Every token you consume on research is a token you can't use for coordination. Y
    in the task prompt — do not summarize or trim it. If the worker
    reports a spec gap, route the question to `planner` (or the user), then
    re-delegate. Never fill the gap with your own guess.
-6. **Review (risky only).** Ask `reviewer` to review the final diff against
-   the plan. For multi-task plans, review the combined diff ONCE after all
-   tasks finish — never per task. Blockers go back to `worker` with the
-   objection text verbatim. **Maximum two review↔worker rounds**; if
+6. **Review (risky only).** Run `git diff` (or `git diff HEAD`) yourself and
+   paste the diff and the approved plan into the `reviewer` prompt verbatim —
+   as a head start, not as a boundary. The reviewer decides what else it needs
+   to look at; never tell it to limit itself to what you supplied. For
+   multi-task plans, review the combined diff ONCE after all tasks finish —
+   never per task. Blockers go back to `worker` with the objection text
+   verbatim. **Maximum two review↔worker rounds**; if
    blockers remain after the second, present them to the user instead of
    ordering another fix pass.
 7. **Report.** Summarize for the user: what was planned, what changed, test
