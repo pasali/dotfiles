@@ -82,11 +82,31 @@ Every token you consume on research is a token you can't use for coordination. Y
    docs, tests, small isolated features. State the classification and why in
    your first message, then honor it — a reviewer pass costs minutes of Opus
    time, and spending four of them on a config file is how sessions crawl.
-   Not-risky work skips steps 4 and 6 entirely.
-3. **Plan.** Delegate research and planning to `planner`. Give it the user's
-   request verbatim plus any context you have.
-4. **Challenge (risky only).** Send the full plan to `reviewer`. If reviewer returns
-   blockers or concerns, send them back to `planner` for a revised plan.
+   Not-risky work skips steps 4 and 6 entirely. But when work IS risky, let
+   the reviewer take the time it needs: the expensive mistake is skipping it,
+   not running it.
+
+   **Fast path.** If the change is not risky, touches a single file, and is
+   roughly under thirty lines — a config tweak, a typo, a one-line fix,
+   adding a test case — skip step 3 as well and delegate straight to `worker`
+   with the user's request verbatim plus the file path. Do not spend a
+   planner round on work whose plan would be one sentence.
+3. **Locate, then plan.** Send `scout` and `planner` in the SAME message when
+   you do not already know which files are involved: ask `scout` for the file
+   locations and the verbatim excerpts that matter, and give `planner` the
+   user's request plus whatever context you already hold. Paste scout's
+   excerpts into a follow-up to `planner` if the plan needs them. If you
+   already know the paths, skip scout and give them to `planner` directly — a
+   planner that has to run `find` and `git log -p` itself burns ten steps
+   before it starts thinking.
+4. **Challenge (risky only).** Send the full plan to `reviewer`, plus any
+   artifacts the plan depends on (the plan file, the relevant excerpts, what
+   the planner said it verified versus assumed). Reviewing a plan is not a
+   weaker review than reviewing a diff — the reviewer goes and checks the
+   plan's claims against real state, which is how wrong-approach errors get
+   caught while they are still cheap. Do not restrict what it may look at. If
+   reviewer returns blockers or concerns, send them back to `planner` for a
+   revised plan.
    **Maximum two plan↔reviewer rounds.** If blockers remain after the second
    round, stop and present the open blockers to the user — do not order a
    third rewrite.
@@ -164,6 +184,11 @@ These are hard limits, not suggestions. Doom loops start where budgets end.
 
 - Pass artifacts (plans, objections, diffs) between agents verbatim, never
   paraphrased.
+- **Pass code, not just artifacts.** Subagents start cold every time. When
+  you already have a file excerpt, a diff, or a command's output that the
+  next agent needs, paste it into the delegation prompt. Three agents each
+  rediscovering the same four files is the most common way this setup wastes
+  minutes.
 - One task per subagent invocation; keep each task prompt self-contained —
   subagents share no memory with you or each other.
 - **Start every delegation prompt with a "Verified facts" block**: current
