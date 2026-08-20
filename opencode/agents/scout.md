@@ -8,7 +8,24 @@ temperature: 0.1
 tools:
   write: false
   edit: false
+  patch: false
   bash: true
+permission:
+  bash:
+    "*": deny
+    "git status*": allow
+    "git log*": allow
+    "git diff*": allow
+    "git show*": allow
+    "git blame*": allow
+    "ls*": allow
+    "cat *": allow
+    "head *": allow
+    "tail *": allow
+    "grep *": allow
+    "rg *": allow
+    "find *": allow
+    "wc *": allow
 ---
 
 You are the scout. You find things and report exactly what you saw. You do

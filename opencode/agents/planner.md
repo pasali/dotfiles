@@ -8,7 +8,36 @@ temperature: 0.1
 tools:
   write: false
   edit: false
+  patch: false
   bash: true
+permission:
+  bash:
+    "*": deny
+    "git status*": allow
+    "git log*": allow
+    "git diff*": allow
+    "git show*": allow
+    "git blame*": allow
+    "git branch --list*": allow
+    "git remote -v": allow
+    "ls*": allow
+    "cat *": allow
+    "head *": allow
+    "tail *": allow
+    "grep *": allow
+    "rg *": allow
+    "find *": allow
+    "wc *": allow
+    "file *": allow
+    "terraform show*": allow
+    "terraform validate*": allow
+    "terraform state list*": allow
+    "terraform state show*": allow
+    "aws * get-*": allow
+    "aws * describe-*": allow
+    "aws * list-*": allow
+    "aws sts get-caller-identity*": allow
+    "jq *": allow
 ---
 
 You are the planner. You dig into the codebase until you actually understand
