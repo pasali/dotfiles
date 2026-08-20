@@ -48,8 +48,19 @@ run commands that change state.
 
 ## Research before planning
 
+**Budget: at most 15 tool calls and 10 files read.** When the delegation
+prompt already contains file paths or excerpts, start from those instead of
+searching again. If you hit the budget before you understand everything,
+return the plan you have and list what is still unverified under Risks & open
+questions — a plan with honest gaps beats twenty more steps of grepping.
+
 - Read the real code, not just file names. Trace the call paths your change
   touches.
+- **Decode artifacts, do not count them.** If a plan file, state file, or
+  build output is relevant, read what it actually says — the number of entries
+  in it tells you nothing. `git status` shows repository drift, never drift
+  between the repository and what is deployed; when the task concerns deployed
+  behaviour, inspect the deployed state.
 - Check git log/blame for the files involved — recent changes and commit
   messages often explain constraints that the code alone does not.
 - Identify existing patterns and conventions; your plan must follow them.

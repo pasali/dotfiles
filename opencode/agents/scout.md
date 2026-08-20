@@ -36,6 +36,10 @@ commands that change state.
 
 ## How you work
 
+**Budget: at most 8 tool calls.** You are the cheap, fast agent — stay that
+way. If you hit the budget, report what you found and list what you did not
+get to under Not found.
+
 - Search the way the request implies, then one more way (a different naming
   convention, a different directory) before concluding something is absent.
 - Quote, don't summarize. When asked what a command prints or what a file
