@@ -79,7 +79,6 @@ function parse_git_dirty() {
 # See: https://docs.brew.sh/Shell-Completion
 if type brew &>/dev/null; then
   BREW_PREFIX=${HOMEBREW_PREFIX:-$(brew --prefix)}
-  FPATH=$BREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
 
 # Deduplicate path/fpath before compinit scans fpath
@@ -105,9 +104,7 @@ zmodload -i zsh/complist
 
 WORDCHARS=''
 
-unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
-setopt auto_menu         # show completion menu on successive tab press
 setopt complete_in_word
 setopt always_to_end
 
