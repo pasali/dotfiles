@@ -78,21 +78,27 @@ function parse_git_dirty() {
 # Add completions installed through Homebrew packages
 # See: https://docs.brew.sh/Shell-Completion
 if type brew &>/dev/null; then
-  BREW_PREFIX=$(brew --prefix)
+  BREW_PREFIX=${HOMEBREW_PREFIX:-$(brew --prefix)}
   FPATH=$BREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
 
-# Speed up completion init: only rebuild the dump file once a day,
-# otherwise trust the cache. See: https://htr3n.github.io/2018/07/faster-zsh/
+# Deduplicate path/fpath before compinit scans fpath
+typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
+
+# Rebuild the completion dump when missing, older than 24h, or when Homebrew's
+# site-functions directory has changed since the last dump.
 autoload -Uz compinit
-if [[ -n "$(find "$HOME/.zcompdump" -mmin +1440 2>/dev/null)" ]]; then
+if [[ ! -f "$HOME/.zcompdump" ||
+      "$BREW_PREFIX/share/zsh/site-functions" -nt "$HOME/.zcompdump" ||
+      -n "$(find "$HOME/.zcompdump" -mmin +1440 2>/dev/null)" ]]; then
+  rm -f "$HOME/.zcompdump"
   compinit
 else
   compinit -C
 fi
 
 
-autoload bashcompinit
+autoload -Uz bashcompinit
 bashcompinit
 
 zmodload -i zsh/complist
@@ -133,9 +139,15 @@ zstyle ':completion:*' rehash true
 # Keep directories and files separated
 zstyle ':completion:*' list-dirs-first true
 
-# kubectl, helm, docker etc. completions come from Homebrew's site-functions
-
+# kubectl, helm, etc. completions come from Homebrew's site-functions.
+# Tools below use bash-style completers or lack a #compdef header:
 [[ -n $commands[terraform] ]] && complete -o nospace -C $commands[terraform] terraform
+[[ -n $commands[aws_completer] ]] && complete -C $commands[aws_completer] aws
+if [[ -r $BREW_PREFIX/share/zsh/site-functions/_google_cloud_sdk ]]; then
+  source $BREW_PREFIX/share/zsh/site-functions/_google_cloud_sdk
+  functions[_gcloud_argcomplete]=$functions[_python_argcomplete]
+  complete -o nospace -o default -F _gcloud_argcomplete gcloud gsutil
+fi
 
 #####################
 #    KEY BINDINGS
@@ -186,9 +198,6 @@ bindkey '^E' end-of-line
 #####################
 #    MISC SETTINGS
 #####################
-
-# automatically remove duplicates from these arrays
-typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 
 if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
     export TERM=xterm-256color
