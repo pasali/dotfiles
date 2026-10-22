@@ -5,8 +5,8 @@
 ###############
 autoload -U colors && colors
 
-# Load the shell dotfiles
-for file in ~/.{exports,aliases,functions,zsh_private}; do
+# Load the shell dotfiles; environment variables come from ~/.exports via zprofile
+for file in ~/.{aliases,functions,zsh_private}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
