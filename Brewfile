@@ -31,9 +31,6 @@ go "honnef.co/go/tools/cmd/staticcheck"
 brew "mysql"
 
 ## shell
-brew "bash"
-brew "bash-completion@2"
-brew "zsh"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "shellcheck"
