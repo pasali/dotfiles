@@ -1,6 +1,6 @@
 DOTFILE_PATH := $(CURDIR)
 
-DOTFILES := aliases exports functions zprofile zshrc git-prompt.sh gitconfig digrc
+DOTFILES := aliases exports functions zprofile zshrc gitconfig digrc
 FILES := $(addprefix $(HOME)/.,$(DOTFILES))
 
 OPENCODE_DIR := $(HOME)/.config/opencode
