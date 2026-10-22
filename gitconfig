@@ -108,12 +108,6 @@
 	# http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
 	precomposeunicode = false
 
-[color]
-
-	# Use colors in Git commands that are capable of colored output when
-	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
-	ui = auto
-
 [color "branch"]
 
 	current = yellow reverse
@@ -124,19 +118,12 @@
 
 	meta = yellow bold
 	frag = magenta bold # line info
-	old = red # deletions
-	new = green # additions
 
 [color "status"]
 
 	added = yellow
 	changed = green
 	untracked = cyan
-
-[commit]
-
-	# https://help.github.com/articles/signing-commits-using-gpg/
-	gpgsign = false
 
 [diff]
 
@@ -193,9 +180,6 @@
 	insteadOf = "gist:"
 [rerere]
 	enabled = 1
-[credential "https://origin.cursor.com/git"]
-	helper = 
-	helper = !"$HOME/.local/bin/origin" credential-helper
 [credential "https://origin.cursor.com"]
 	helper = 
 	helper = !"$HOME/.local/bin/origin" credential-helper
