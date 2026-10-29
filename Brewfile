@@ -17,7 +17,6 @@ brew "virtualenv"
 ## go tooling
 brew "delve"
 brew "golangci-lint"
-go "github.com/go-delve/delve/cmd/dlv"
 go "github.com/kisielk/errcheck"
 go "github.com/fatih/gomodifytags"
 go "github.com/haya14busa/goplay/cmd/goplay"
@@ -79,7 +78,6 @@ cask "codex"
 cask "docker/tap/sbx", trusted: true
 
 ## networking
-brew "curl"
 brew "wget"
 brew "httpie"
 brew "aria2"
@@ -140,7 +138,6 @@ cask "vlc"
 ## npm globals
 npm "@aws/agentcore"
 npm "@earendil-works/pi-coding-agent"
-npm "@nrwl/cli"
 npm "firebase-tools"
 npm "nx"
 npm "pnpm"
