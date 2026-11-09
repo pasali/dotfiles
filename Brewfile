@@ -1,5 +1,4 @@
 ## taps
-tap "anomalyco/tap", trusted: true
 tap "aws/tap", trusted: true
 tap "docker/tap", trusted: true
 tap "hashicorp/tap", trusted: true
@@ -69,7 +68,6 @@ brew "hashicorp/tap/terraform"
 brew "terraform-ls"
 
 ## ai tooling
-brew "anomalyco/tap/opencode", trusted: true
 brew "gemini-cli"
 brew "herdr"
 cask "claude"
